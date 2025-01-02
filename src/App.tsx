@@ -105,7 +105,7 @@ function Dashboard() {
           {closedPRs && (
             <PRList
               title="Recently Closed Pull Requests"
-              data={closedPRs}
+              data={closedPRs as never}
               description="Pull requests closed in the last 7 days"
             />
           )}

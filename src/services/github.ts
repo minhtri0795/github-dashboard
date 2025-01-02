@@ -118,7 +118,8 @@ export const githubApi = {
         merged_at : new Date(),
         merged_by: {
           login: 'unknown',
-          githubId: 0
+          _id: '0',
+          avatar_url: '',
         }
       };
     }
