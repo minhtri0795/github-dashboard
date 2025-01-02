@@ -4,18 +4,49 @@ export interface DateFilterDto {
 }
 
 export interface GitHubUser {
+  _id: string;
   login: string;
-  githubId: number;
+  avatar_url: string;
+}
+
+export interface Repository {
+  id: number;
+  node_id: string;
+  name: string;
+  full_name: string;
+  private: boolean;
+}
+
+export interface PullRequestRef {
+  label: string;
+  ref: string;
+  sha: string;
 }
 
 export interface PullRequest {
   prNumber: number;
   title: string;
   html_url: string;
-  repository: string;
-  created_at: Date;
-  state?: string;
-  user: GitHubUser;
+  repository: Repository;
+  created_at: string;
+  closed_at: string;
+  merged: boolean;
+  head: PullRequestRef;
+  base: PullRequestRef;
+  creator: GitHubUser;
+  closer: GitHubUser;
+}
+
+export interface RepositoryPRs {
+  _id: string;
+  totalClosedPRs: number;
+  mergedPRs: number;
+  prs: PullRequest[];
+}
+
+export interface ClosedPRsResponse {
+  totalClosedPRs: number;
+  repositories: RepositoryPRs[];
 }
 
 export interface SelfMergedPR {
@@ -59,6 +90,7 @@ export interface RepositoryStats {
   openPRs: number;
   closedPRs: number;
   mergedPRs: number;
+  _id: string;
 }
 
 export interface Commit {
@@ -79,4 +111,20 @@ export interface CommitStatistics {
     date: string;
     count: number;
   }[];
+}
+
+export interface GitHubUserStatistics {
+  _id: string;
+  githubId: number;
+  login: string;
+  avatar_url: string;
+  statistics: {
+    openPRs: number;
+    closedPRs: number;
+    selfMergedPRs: number;
+  };
+  dateRange: {
+    startDate: string;
+    endDate: string;
+  };
 }

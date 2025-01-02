@@ -11,6 +11,7 @@ export const API_CONFIG = {
       COMMITS: '/commits',
       COMMIT_STATISTICS: '/commit-statistics',
       SELF_MERGED_PRS: '/self-merged-prs',
+      USERS: '/users'
     }
   }
 } as const;

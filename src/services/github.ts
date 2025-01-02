@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { DateFilterDto, PRStatistics, PullRequest, RepositoryStats, Commit, CommitStatistics, SelfMergedPR } from '../types/github';
+import { DateFilterDto, PRStatistics, PullRequest, RepositoryStats, Commit, CommitStatistics, SelfMergedPR, GitHubUserStatistics } from '../types/github';
 import { getGithubEndpoint } from '../config/api';
 
 // Create axios instance with common configuration
@@ -141,6 +141,16 @@ export const githubApi = {
     } catch (error) {
       console.error('Error fetching commit statistics:', error);
       throw error;
+    }
+  },
+
+  async getUsers(): Promise<GitHubUserStatistics[]> {
+    try {
+      const { data } = await api.get(getGithubEndpoint('USERS'));
+      return data;
+    } catch (error) {
+      console.error('Error fetching user statistics:', error);
+      return [];
     }
   }
 };
