@@ -8,7 +8,7 @@ export function UserStats({ users }: UserStatsProps) {
   return (
     <div className="bg-card shadow rounded-lg overflow-hidden">
       <div className="px-4 py-5 sm:px-6">
-        <h2 className="text-xl text-light font-semibold mb-4">
+        <h2 className="text-xl text-gray font-semibold mb-4">
           Team Statistics
         </h2>
         <p className="mt-1 text-sm text-gray-500">
@@ -47,25 +47,7 @@ export function UserStats({ users }: UserStatsProps) {
                     </span>
                     <span className="text-xs text-gray-400">total PRs</span>
                   </div>
-                  <div className="h-12 w-12 rounded-full bg-gray-700/50 border border-gray-600 p-[2px]">
-                    <div className={`h-full w-full rounded-full flex items-center justify-center ${
-                      (user.statistics.closedPRs / (user.statistics.closedPRs + user.statistics.openPRs)) * 100 < 30
-                        ? 'bg-gradient-to-r from-red-500 to-orange-500'
-                        : (user.statistics.closedPRs / (user.statistics.closedPRs + user.statistics.openPRs)) * 100 < 70
-                        ? 'bg-gradient-to-r from-yellow-500 to-green-500'
-                        : 'bg-gradient-to-r from-green-500 to-emerald-500'
-                    }`}>
-                      <span className="text-sm font-medium text-white">
-                        {Math.round(
-                          (user.statistics.closedPRs /
-                            (user.statistics.closedPRs +
-                              user.statistics.openPRs)) *
-                            100
-                        )}
-                        %
-                      </span>
-                    </div>
-                  </div>
+                  
                 </div>
               </div>
             </li>

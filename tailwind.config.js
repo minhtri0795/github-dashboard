@@ -1,6 +1,5 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: ["class"],
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -20,10 +19,11 @@ module.exports = {
         sm: 'calc(var(--radius) - 4px)'
       },
       colors: {
+        gray: "#1c2434",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
+        background: "#f5f5f5",
         foreground: "hsl(var(--foreground))",
         "light": "#E7E6EB",
         "blue": '#2b5ad9',
@@ -52,7 +52,7 @@ module.exports = {
           foreground: "hsl(var(--popover-foreground))",
         },
         card: {
-          DEFAULT: "#2d2d31",
+          DEFAULT: "#ffffff",
           foreground: "hsl(var(--card-foreground))",
         },
         chart: {

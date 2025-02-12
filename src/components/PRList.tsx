@@ -25,7 +25,7 @@ export function PRList({ title, data, description }: PRListProps) {
         <p className="mt-1 text-sm text-blue">Total PRs: {data?.totalClosedPRs || 0}</p>
       </div>
       <div className="border-t border-gray-700 flex-1 overflow-hidden">
-        <div className="max-h-[600px] overflow-y-auto scrollbar-thin scrollbar-thumb-blue/10 scrollbar-track-transparent hover:scrollbar-thumb-blue/20">
+        <div className="max-h-[600px] overflow-y-auto scrollbar-thin scrollbar">
           {data.repositories.length === 0 ? (
             <div className="p-6 text-center">
               <p className="text-sm text-gray-400">No repositories found</p>
