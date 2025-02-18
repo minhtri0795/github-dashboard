@@ -1,6 +1,6 @@
 export interface DateFilterDto {
-  startDate?: string;
-  endDate?: string;
+  startDate: string;
+  endDate: string;
 }
 
 export interface GitHubUser {

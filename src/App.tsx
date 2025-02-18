@@ -14,6 +14,7 @@ import { githubApi } from "./services/github";
 import { DateRange } from "react-day-picker";
 import { OpenPRs } from "./pages/OpenPRs";
 import { differenceInDays } from "date-fns";
+import { validateDateRange, createDateFilter } from "./lib/dateUtils";
 
 // Configure query client with defaults
 const queryClient = new QueryClient({
@@ -31,15 +32,14 @@ const getDefaultDateRange = () => {
   const endDate = new Date();
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - 7);
+  const dateRange = {
+    from: startDate,
+    to: endDate,
+  };
+  
   return {
-    dateRange: {
-      from: startDate,
-      to: endDate,
-    },
-    filter: {
-      startDate: startDate.toISOString(),
-      endDate: endDate.toISOString(),
-    },
+    dateRange,
+    filter: createDateFilter(dateRange),
   };
 };
 
@@ -109,15 +109,11 @@ function Dashboard() {
   };
 
   const handleDateRangeChange = (newRange: DateRange | undefined) => {
-    if (newRange?.from && newRange?.to) {
-      setDateRange(newRange);
-      setFilter({
-        startDate: newRange.from.toISOString(),
-        endDate: newRange.to.toISOString(),
-      });
-    } else {
-      resetToDefault();
-    }
+    const validRange = validateDateRange(newRange || dateRange);
+    const newFilter = createDateFilter(validRange);
+    
+    setDateRange(validRange);
+    setFilter(newFilter);
   };
 
   // Fetch PR statistics using the filter from state
