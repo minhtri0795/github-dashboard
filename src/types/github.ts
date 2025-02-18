@@ -5,8 +5,27 @@ export interface DateFilterDto {
 
 export interface GitHubUser {
   _id: string;
+  githubId: number;
   login: string;
+  node_id: string;
   avatar_url: string;
+  gravatar_id: string;
+  url: string;
+  html_url: string;
+  followers_url: string;
+  following_url: string;
+  gists_url: string;
+  starred_url: string;
+  subscriptions_url: string;
+  organizations_url: string;
+  repos_url: string;
+  events_url: string;
+  received_events_url: string;
+  type: string;
+  site_admin: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }
 
 export interface Repository {
@@ -127,4 +146,30 @@ export interface GitHubUserStatistics {
     startDate: string;
     endDate: string;
   };
+}
+
+export interface OpenPRsResponse {
+  totalOpenPRs: number;
+  repositories: Array<{
+    _id: string;
+    totalOpenPRs: number;
+    prs: Array<{
+      prNumber: number;
+      title: string;
+      created_at: string;
+      user: string;
+      html_url: string;
+      head: {
+        label: string;
+        ref: string;
+        sha: string;
+      };
+      base: {
+        label: string;
+        ref: string;
+        sha: string;
+      };
+    }>;
+    users: GitHubUser[];
+  }>;
 }

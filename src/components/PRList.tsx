@@ -10,7 +10,7 @@ export function PRList({ title, data, description }: PRListProps) {
   if (!data || !data.repositories) {
     return (
       <div className="bg-card shadow rounded-lg p-6">
-        <h3 className="text-lg font-medium text-light">{title}</h3>
+        <h3 className="text-lg font-medium text-gray">{title}</h3>
         {description && <p className="mt-1 text-sm text-gray-500">{description}</p>}
         <p className="mt-4 text-sm text-gray-400">No data available</p>
       </div>
@@ -20,7 +20,7 @@ export function PRList({ title, data, description }: PRListProps) {
   return (
     <div className="bg-card shadow rounded-lg flex flex-col">
       <div className="px-4 py-5 sm:px-6 flex-none">
-        <h3 className="text-lg font-medium text-light">{title}</h3>
+        <h3 className="text-lg font-medium text-gray">{title}</h3>
         {description && <p className="mt-1 text-sm text-gray-500">{description}</p>}
         <p className="mt-1 text-sm text-blue">Total PRs: {data?.totalClosedPRs || 0}</p>
       </div>
@@ -33,20 +33,24 @@ export function PRList({ title, data, description }: PRListProps) {
           ) : (
             data.repositories.map((repo) => (
               <div key={repo._id} className="border-b border-gray-700 last:border-b-0">
-                <div className="px-4 py-4 bg-card border-b border-blue/20 sticky top-0 backdrop-blur-sm">
-                  <h4 className="text-md font-semibold text-blue flex items-center justify-between">
+                <div className="px-4 py-4 bg-white border-b border-gray-200 sticky top-0 backdrop-blur-sm shadow-sm">
+                  <h4 className="text-md font-semibold text-gray-900 flex items-center justify-between">
                     <div className="flex items-center space-x-2">
                       <span className="text-lg">{repo._id?.split('/')[1] || 'Unknown Repository'}</span>
-                      <div className="px-2 py-1 rounded-full bg-blue/20 text-xs">
+                      <div className="px-2 py-1 rounded-full bg-green-50 text-green-700 text-xs font-medium">
                         repository
                       </div>
                     </div>
-                    <div className="flex items-center space-x-1 text-sm">
-                      <span className="font-medium text-blue">{repo.mergedPRs || 0}</span>
-                      <span className="text-gray-400">merged</span>
-                      <span className="text-gray-400">/</span>
-                      <span className="font-medium text-blue">{repo.totalClosedPRs || 0}</span>
-                      <span className="text-gray-400">total</span>
+                    <div className="flex items-center space-x-2 text-sm">
+                      <div className="flex items-center space-x-1 bg-gray-50 px-2 py-1 rounded-md">
+                        <span className="font-medium text-green-700">{repo.mergedPRs || 0}</span>
+                        <span className="text-gray-500">merged</span>
+                      </div>
+                      <span className="text-gray-300">/</span>
+                      <div className="flex items-center space-x-1 bg-gray-50 px-2 py-1 rounded-md">
+                        <span className="font-medium text-gray-900">{repo.totalClosedPRs || 0}</span>
+                        <span className="text-gray-500">total</span>
+                      </div>
                     </div>
                   </h4>
                 </div>

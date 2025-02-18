@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { DateFilterDto, PRStatistics, PullRequest, RepositoryStats, Commit, CommitStatistics, SelfMergedPR, GitHubUserStatistics } from '../types/github';
+import { DateFilterDto, PRStatistics, PullRequest, RepositoryStats, Commit, CommitStatistics, SelfMergedPR, GitHubUserStatistics, OpenPRsResponse } from '../types/github';
 import { getGithubEndpoint } from '../config/api';
 
 // Create axios instance with common configuration
@@ -77,9 +77,9 @@ export const githubApi = {
     }
   },
 
-  async getRepositoryStats(): Promise<RepositoryStats[]> {
+  async getRepositoryStats(filter: DateFilterDto = getDefaultDateFilter()): Promise<RepositoryStats[]> {
     try {
-      const { data } = await api.get(getGithubEndpoint('REPOSITORY_STATS'));
+      const { data } = await api.get(getGithubEndpoint('REPOSITORY_STATS'), { params: filter });
       return data;
     } catch (error) {
       console.error('Error fetching repository stats:', error);
@@ -87,14 +87,10 @@ export const githubApi = {
     }
   },
 
-  async getOpenPRs(filter: DateFilterDto = getDefaultDateFilter()): Promise<PullRequest[]> {
-    try {
-      const { data } = await api.get(getGithubEndpoint('OPEN_PRS'), { params: filter });
-      return data;
-    } catch (error) {
-      console.error('Error fetching open PRs:', error);
-      return [];
-    }
+  async getOpenPRs(filter: DateFilterDto = getDefaultDateFilter()): Promise<OpenPRsResponse> {
+    return api
+      .get(getGithubEndpoint('OPEN_PRS'), { params: filter })
+      .then((response) => response.data);
   },
 
   async getClosedPRs(filter: DateFilterDto = getDefaultDateFilter()): Promise<PullRequest[]> {
@@ -115,11 +111,30 @@ export const githubApi = {
       console.error('Error fetching self-merged PRs:', error);
       return {
         totalSelfMergedPRs: 0,
-        merged_at : new Date(),
+        merged_at: new Date(),
         merged_by: {
-          login: 'unknown',
           _id: '0',
+          githubId: 0,
+          login: 'unknown',
+          node_id: '',
           avatar_url: '',
+          gravatar_id: '',
+          url: '',
+          html_url: '',
+          followers_url: '',
+          following_url: '',
+          gists_url: '',
+          starred_url: '',
+          subscriptions_url: '',
+          organizations_url: '',
+          repos_url: '',
+          events_url: '',
+          received_events_url: '',
+          type: 'User',
+          site_admin: false,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          __v: 0
         }
       };
     }
@@ -145,9 +160,9 @@ export const githubApi = {
     }
   },
 
-  async getUsers(): Promise<GitHubUserStatistics[]> {
+  async getUsers(filter: DateFilterDto = getDefaultDateFilter()): Promise<GitHubUserStatistics[]> {
     try {
-      const { data } = await api.get(getGithubEndpoint('USERS'));
+      const { data } = await api.get(getGithubEndpoint('USERS'), { params: filter });
       return data;
     } catch (error) {
       console.error('Error fetching user statistics:', error);
