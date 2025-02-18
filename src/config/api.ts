@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  BASE_URL: 'http://localhost:3000/webhooks/github',
+  BASE_URL: 'https://api.sd-dev.pro/webhooks/github',
   ENDPOINTS: {
     GITHUB: {
       BASE: '',
