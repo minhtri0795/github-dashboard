@@ -116,25 +116,24 @@ export const githubApi = {
           _id: '0',
           githubId: 0,
           login: 'unknown',
-          node_id: '',
           avatar_url: '',
-          gravatar_id: '',
-          url: '',
-          html_url: '',
-          followers_url: '',
-          following_url: '',
-          gists_url: '',
-          starred_url: '',
-          subscriptions_url: '',
-          organizations_url: '',
-          repos_url: '',
-          events_url: '',
-          received_events_url: '',
-          type: 'User',
-          site_admin: false,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          __v: 0
+          statistics: {
+            summary: {
+              openPRs: 0,
+              closedPRs: 0,
+              selfMergedPRs: 0
+            },
+            details: {
+              openPullRequests: [],
+              closedPullRequests: [],
+              selfMergedPullRequests: []
+            },
+            activityByDay: []
+          },
+          dateRange: {
+            startDate: new Date().toISOString(),
+            endDate: new Date().toISOString()
+          }
         }
       };
     }
