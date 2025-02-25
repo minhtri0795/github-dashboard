@@ -1,5 +1,16 @@
 import axios from 'axios';
-import { DateFilterDto, PRStatistics, PullRequest, RepositoryStats, Commit, CommitStatistics, SelfMergedPR, GitHubUserStatistics, OpenPRsResponse } from '../types/github';
+import { 
+  DateFilterDto, 
+  PRStatistics, 
+  PullRequest, 
+  RepositoryStats, 
+  Commit, 
+  CommitStatistics, 
+  SelfMergedPR, 
+  GitHubUserStatistics, 
+  OpenPRsResponse, 
+  UserDetail 
+} from '../types/github';
 import { getGithubEndpoint } from '../config/api';
 
 // Create axios instance with common configuration
@@ -116,24 +127,25 @@ export const githubApi = {
           _id: '0',
           githubId: 0,
           login: 'unknown',
+          node_id: '',
           avatar_url: '',
-          statistics: {
-            summary: {
-              openPRs: 0,
-              closedPRs: 0,
-              selfMergedPRs: 0
-            },
-            details: {
-              openPullRequests: [],
-              closedPullRequests: [],
-              selfMergedPullRequests: []
-            },
-            activityByDay: []
-          },
-          dateRange: {
-            startDate: new Date().toISOString(),
-            endDate: new Date().toISOString()
-          }
+          gravatar_id: '',
+          url: '',
+          html_url: '',
+          followers_url: '',
+          following_url: '',
+          gists_url: '',
+          starred_url: '',
+          subscriptions_url: '',
+          organizations_url: '',
+          repos_url: '',
+          events_url: '',
+          received_events_url: '',
+          type: 'User',
+          site_admin: false,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          __v: 0
         }
       };
     }
@@ -164,8 +176,26 @@ export const githubApi = {
       const { data } = await api.get(getGithubEndpoint('USERS'), { params: filter });
       return data;
     } catch (error) {
-      console.error('Error fetching user statistics:', error);
+      console.error('Error fetching users:', error);
       return [];
     }
-  }
+  },
+
+  async getUserDetail(githubId: string, filter: DateFilterDto = getDefaultDateFilter()): Promise<UserDetail> {
+    try {
+      console.log('Fetching user detail with params:', { githubId, filter });
+      const endpoint = getGithubEndpoint('USER_DETAIL').replace(':githubId', githubId);
+      console.log('Calling endpoint:', endpoint);
+      const { data } = await api.get(endpoint, { params: filter });
+      console.log('Response data:', data);
+      return data;
+    } catch (error) {
+      console.error('Error fetching user detail:', error);
+      if (axios.isAxiosError(error)) {
+        console.error('Response:', error.response?.data);
+        console.error('Status:', error.response?.status);
+      }
+      throw error;
+    }
+  },
 };

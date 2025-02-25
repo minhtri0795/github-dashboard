@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 
 export function OpenPRs() {
   const { filter, setFilter, resetToDefault } = useFilter();
@@ -41,12 +42,12 @@ export function OpenPRs() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900 text-left">Open Pull Requests</h1>
           {openPRsData && (
-            <p className="text-sm mt-1 flex items-center space-x-1">
+            <p className="text-sm mt-1 flex items-center space-x-2">
               <span className="bg-green-50 text-green-700 px-2 py-0.5 rounded-md font-medium">
                 {filteredTotalOpenPRs}
               </span>
               <span className="text-gray-500">open pull requests across</span>
-              <span className="bg-gray-50 text-gray-700 px-2 py-0.5 rounded-md font-medium">
+              <span className="bg-gray-50 text-gray-700 bg-zinc-300 px-2 py-0.5 rounded-md font-medium">
                 {filteredRepositories.length}
               </span>
               <span className="text-gray-500">repositories</span>
@@ -123,11 +124,21 @@ export function OpenPRs() {
                       <div className="flex items-start justify-between">
                         <div className="flex items-start space-x-3">
                           {user && (
-                            <img
-                              src={user.avatar_url}
-                              alt={user.login}
-                              className="w-8 h-8 rounded-full"
-                            />
+                            <Link
+                              to={`/users/${user.githubId}`}
+                              className="group flex items-center space-x-3 group p-1 rounded-lg transition-colors duration-200 hover:bg-gray-50"
+                            >
+                              <img
+                                src={user.avatar_url}
+                                alt={user.login}
+                                className="w-8 h-8 rounded-full ring-2 ring-transparent group-hover:ring-blue-400 transition-all duration-200"
+                              />
+                              <div>
+                                <span className="group-hover:underline text-sm font-medium text-gray-900 group-hover:text-blue-600 transition-colors duration-200 flex items-center space-x-1">
+                                  {user.login}
+                                </span>
+                              </div>
+                            </Link>
                           )}
                           <div>
                             <a
@@ -142,12 +153,6 @@ export function OpenPRs() {
                               <span>#{pr.prNumber}</span>
                               <span>•</span>
                               <span>opened {format(new Date(pr.created_at), 'MMM d, yyyy')}</span>
-                              {user && (
-                                <>
-                                  <span>•</span>
-                                  <span>by {user.login}</span>
-                                </>
-                              )}
                             </div>
                           </div>
                         </div>

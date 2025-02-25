@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { GitHubUserStatistics } from "../types/github";
 
 interface UserStatsProps {
@@ -29,9 +30,9 @@ export function UserStats({ users }: UserStatsProps) {
                   className="w-10 h-10 rounded-full"
                 />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate">
+                  <Link to={`/users/${user.githubId}`} className="text-sm hover:underline font-medium text-gray-900 truncate">
                     {user.login}
-                  </p>
+                  </Link>
                   <div className="flex items-center space-x-4 text-sm text-gray-500">
                     <div className="flex items-center space-x-1">
                       <span className={`inline-block w-2 h-2 rounded-full ${

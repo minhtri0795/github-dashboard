@@ -13,6 +13,7 @@ import { DateRangePicker } from "./components/ui/date-range-picker";
 import { githubApi } from "./services/github";
 import { DateRange } from "react-day-picker";
 import { OpenPRs } from "./pages/OpenPRs";
+import { UserDetail } from "./pages/UserDetail";
 import { differenceInDays } from "date-fns";
 import { validateDateRange, createDateFilter } from "./lib/dateUtils";
 
@@ -292,12 +293,13 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <FilterContext.Provider value={{ filter, setFilter, resetToDefault }}>
         <BrowserRouter>
-          <div className="min-h-screen bg-background">
+          <div className="min-h-screen bg-gray-50">
             <Navigation />
             <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
               <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/open-prs" element={<OpenPRs />} />
+                <Route path="/users/:githubId" element={<UserDetail />} />
               </Routes>
             </main>
           </div>

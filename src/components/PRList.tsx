@@ -102,7 +102,7 @@ export function PRList({ title, data, description }: PRListProps) {
                             <div className="flex items-center space-x-2">
                               <span className="text-sm text-gray-400">#{pr.prNumber}</span>
                               {pr.creator && pr.closer && pr.creator._id === pr.closer._id && (
-                                <span className="text-xs bg-blue/20 text-blue px-2 py-1 rounded-full">
+                                <span className="text-xs bg-amber-500 text-white px-2 py-1 rounded-full">
                                   self-merged
                                 </span>
                               )}

@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  BASE_URL: 'https://api.sd-dev.pro/webhooks/github',
+  BASE_URL: 'http://localhost:3000/webhooks/github',
   ENDPOINTS: {
     GITHUB: {
       BASE: '',
@@ -11,11 +11,12 @@ export const API_CONFIG = {
       COMMITS: '/commits',
       COMMIT_STATISTICS: '/commit-statistics',
       SELF_MERGED_PRS: '/self-merged-prs',
-      USERS: '/users'
+      USERS: '/users',
+      USER_DETAIL: '/users/:githubId'
     }
   }
 } as const;
 
-export const getGithubEndpoint = (endpoint: keyof typeof API_CONFIG.ENDPOINTS.GITHUB) => {
-  return `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.GITHUB[endpoint]}`;
+export const getGithubEndpoint = (key: keyof typeof API_CONFIG.ENDPOINTS.GITHUB) => {
+  return `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.GITHUB[key]}`;
 };
