@@ -14,6 +14,7 @@ import { githubApi } from "./services/github";
 import { DateRange } from "react-day-picker";
 import { OpenPRs } from "./pages/OpenPRs";
 import { UserDetail } from "./pages/UserDetail";
+import { Team } from "./pages/Team";
 import { differenceInDays } from "date-fns";
 import { validateDateRange, createDateFilter } from "./lib/dateUtils";
 
@@ -66,25 +67,31 @@ export const useFilter = () => {
 
 function Navigation() {
   return (
-    <nav className="bg-white shadow-sm">
+    <nav className="bg-white shadow-sm container">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
-              <h1 className="text-xl font-bold text-gray">GitHub Dashboard</h1>
+              <h1 className="text-xl font-bold text-gray"><img src="/logo.png" width={40} height={40}/></h1>
             </div>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
               <Link
                 to="/"
-                className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-800 inline-flex items-center px-1 pt-1 border-b-2 text-base font-medium"
               >
                 Dashboard
               </Link>
               <Link
                 to="/open-prs"
-                className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-800 inline-flex items-center px-1 pt-1 border-b-2 text-base font-medium"
               >
                 Open PRs
+              </Link>
+              <Link
+                to="/team"
+                className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-800 inline-flex items-center px-1 pt-1 border-b-2 text-base font-medium"
+              >
+                Team
               </Link>
             </div>
           </div>
@@ -299,6 +306,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/open-prs" element={<OpenPRs />} />
+                <Route path="/team" element={<Team />} />
                 <Route path="/users/:githubId" element={<UserDetail />} />
               </Routes>
             </main>

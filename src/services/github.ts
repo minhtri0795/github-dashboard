@@ -9,7 +9,8 @@ import {
   SelfMergedPR, 
   GitHubUserStatistics, 
   OpenPRsResponse, 
-  UserDetail 
+  UserDetail,
+  GitHubUser
 } from '../types/github';
 import { getGithubEndpoint } from '../config/api';
 
@@ -179,6 +180,10 @@ export const githubApi = {
       console.error('Error fetching users:', error);
       return [];
     }
+  },
+
+  async getUsersAll(): Promise<GitHubUser[]> {
+    return api.get(getGithubEndpoint('USERS'));
   },
 
   async getUserDetail(githubId: string, filter: DateFilterDto = getDefaultDateFilter()): Promise<UserDetail> {

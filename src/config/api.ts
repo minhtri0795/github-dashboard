@@ -17,6 +17,12 @@ export const API_CONFIG = {
   }
 } as const;
 
+export const GITHUB_ENDPOINTS = {
+  OPEN_PRS: '/github/open-prs',
+  USER_DETAIL: '/github/users/:githubId',
+  USERS: '/github/users',
+};
+
 export const getGithubEndpoint = (key: keyof typeof API_CONFIG.ENDPOINTS.GITHUB) => {
   return `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.GITHUB[key]}`;
 };
