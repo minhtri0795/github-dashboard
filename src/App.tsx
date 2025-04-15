@@ -17,6 +17,7 @@ import { UserDetail } from "./pages/UserDetail";
 import { Team } from "./pages/Team";
 import { differenceInDays } from "date-fns";
 import { validateDateRange, createDateFilter } from "./lib/dateUtils";
+import { Turnstile } from '@marsidev/react-turnstile'
 
 // Configure query client with defaults
 const queryClient = new QueryClient({
@@ -303,6 +304,7 @@ function App() {
           <div className="min-h-screen bg-gray-50">
             <Navigation />
             <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+              <Turnstile siteKey='0x4AAAAAABL7MGo5ZGI9pvq0' />
               <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/open-prs" element={<OpenPRs />} />
