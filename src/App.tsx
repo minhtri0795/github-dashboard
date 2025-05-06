@@ -17,7 +17,6 @@ import { UserDetail } from "./pages/UserDetail";
 import { Team } from "./pages/Team";
 import { differenceInDays } from "date-fns";
 import { validateDateRange, createDateFilter } from "./lib/dateUtils";
-import { Turnstile } from '@marsidev/react-turnstile'
 
 // Configure query client with defaults
 const queryClient = new QueryClient({
@@ -140,7 +139,7 @@ function Dashboard() {
   // Fetch repository stats
   const { data: repoStats } = useQuery({
     queryKey: ["repo-stats", filter],
-    queryFn: () => githubApi.getRepositoryStats(),
+    queryFn: () => githubApi.getRepositoryStats(filter),
   });
 
   // Fetch self-merged PRs
@@ -176,14 +175,14 @@ function Dashboard() {
           {/* Statistics Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <StatsCard
-              title="Active PRs"
+              title="Total PRs"
               value={stats?.summary.createdInRange ?? 0}
               description={dayCount > 1 ? `Last ${dayCount} days` : `Today`}
             />
             <StatsCard
               title="Open PRs"
               value={stats?.summary.openPRs ?? 0}
-              description={dayCount > 1 ? `Last ${dayCount} days` : `Today`}
+              description={'Not merged'}
             />
             <StatsCard
               title="Merged PRs"
@@ -193,6 +192,7 @@ function Dashboard() {
             <StatsCard
               title="Self-Merged PRs"
               value={selfMergedPRs?.totalSelfMergedPRs ?? 0}
+              description={dayCount > 1 ? `Last ${dayCount} days` : `Today`}
             />
           </div>
           {/* User Statistics */}
@@ -304,7 +304,6 @@ function App() {
           <div className="min-h-screen bg-gray-50">
             <Navigation />
             <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-              <Turnstile siteKey='0x4AAAAAABL7MGo5ZGI9pvq0' />
               <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/open-prs" element={<OpenPRs />} />
