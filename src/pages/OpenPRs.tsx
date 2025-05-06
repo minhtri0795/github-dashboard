@@ -88,12 +88,19 @@ export function OpenPRs() {
             }}
             className="max-w-sm justify-end"
           />
+          <button
+            onClick={resetToDefault}
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          >
+            Reset Filters
+          </button>
         </div>
+        
       </div>
 
       {isLoading ? (
         <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-900"></div>
         </div>
       ) : (
         <div className="space-y-6">

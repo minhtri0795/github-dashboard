@@ -10,7 +10,8 @@ import {
   GitHubUserStatistics, 
   OpenPRsResponse, 
   UserDetail,
-  GitHubUser
+  GitHubUser,
+  CommitsResponse
 } from '../types/github';
 import { getGithubEndpoint } from '../config/api';
 
@@ -201,6 +202,19 @@ export const githubApi = {
         console.error('Status:', error.response?.status);
       }
       throw error;
+    }
+  },
+  
+  async getCommitsData(filter: DateFilterDto = getDefaultDateFilter()): Promise<CommitsResponse> {
+    try {
+      const { data } = await api.get(getGithubEndpoint('COMMITS'), { params: filter });
+      return data;
+    } catch (error) {
+      console.error('Error fetching commits data:', error);
+      return {
+        totalCommits: 0,
+        repositories: []
+      };
     }
   },
 };

@@ -11,12 +11,12 @@ import { StatsCard } from "./components/StatsCard";
 import { UserStats } from "./components/UserStats";
 import { DateRangePicker } from "./components/ui/date-range-picker";
 import { githubApi } from "./services/github";
-import { DateRange } from "react-day-picker";
 import { OpenPRs } from "./pages/OpenPRs";
 import { UserDetail } from "./pages/UserDetail";
 import { Team } from "./pages/Team";
+import { Commits } from "./pages/Commits";
 import { differenceInDays } from "date-fns";
-import { validateDateRange, createDateFilter } from "./lib/dateUtils";
+import { createDateFilter } from "./lib/dateUtils";
 
 // Configure query client with defaults
 const queryClient = new QueryClient({
@@ -66,6 +66,11 @@ export const useFilter = () => {
 };
 
 function Navigation() {
+  const { filter } = useFilter();
+  const { data: commits } = useQuery({
+    queryKey: ["commits-data", filter],
+    queryFn: () => githubApi.getCommitsData(filter),
+  });
   return (
     <nav className="bg-white shadow-sm container">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -82,11 +87,19 @@ function Navigation() {
                 Dashboard
               </Link>
               <Link
+                to="/commits"
+                className="z-10 relative border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-800 inline-flex items-center px-1 pt-1 border-b-2 text-base font-medium"
+              >
+                Commits
+                <span className="absolute top-2 -right-5 text-xs text-gray-500 bg-orange-400 text-white px-2 py-1 rounded-md">{commits?.totalCommits}</span>
+              </Link>
+              <Link
                 to="/open-prs"
                 className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-800 inline-flex items-center px-1 pt-1 border-b-2 text-base font-medium"
               >
                 Open PRs
               </Link>
+              
               <Link
                 to="/team"
                 className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-800 inline-flex items-center px-1 pt-1 border-b-2 text-base font-medium"
@@ -102,27 +115,12 @@ function Navigation() {
 }
 
 function Dashboard() {
-  const defaultDates = getDefaultDateRange();
-  const [dateRange, setDateRange] = useState<DateRange>(defaultDates.dateRange);
-  const [filter, setFilter] = useState(defaultDates.filter);
+  
+  const { filter, setFilter, resetToDefault } = useFilter();
 
   const dayCount = useMemo(() => {
     return differenceInDays(new Date(filter.endDate), new Date(filter.startDate));
   }, [filter.startDate, filter.endDate]);
-
-  const resetToDefault = () => {
-    const defaults = getDefaultDateRange();
-    setDateRange(defaults.dateRange);
-    setFilter(defaults.filter);
-  };
-
-  const handleDateRangeChange = (newRange: DateRange | undefined) => {
-    const validRange = validateDateRange(newRange || dateRange);
-    const newFilter = createDateFilter(validRange);
-    
-    setDateRange(validRange);
-    setFilter(newFilter);
-  };
 
   // Fetch PR statistics using the filter from state
   const { data: stats } = useQuery({
@@ -155,7 +153,7 @@ function Dashboard() {
   });
 
   return (
-    <FilterContext.Provider value={{ filter, setFilter, resetToDefault }}>
+    
       <div className="min-h-screen bg-background">
         <header className="">
           <div className="mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -166,10 +164,28 @@ function Dashboard() {
           <div className="container mx-auto px-4 py-8">
             <div className="mb-6 flex items-center justify-end space-x-2 ">
               <DateRangePicker
-                date={dateRange}
-                onDateChange={handleDateRangeChange}
+                date={{
+                  from: filter.startDate ? new Date(filter.startDate) : null,
+                  to: filter.endDate ? new Date(filter.endDate) : null,
+                }}
+                onDateChange={(range) => {
+                  if (range?.from && range?.to) {
+                    setFilter({
+                      startDate: range.from.toISOString(),
+                      endDate: range.to.toISOString(),
+                    });
+                  } else {
+                    resetToDefault();
+                  }
+                }}
                 className="w-full max-w-sm justify-end"
               />
+              <button
+                onClick={resetToDefault}
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              >
+                Reset Filters
+              </button>
             </div>
           </div>
           {/* Statistics Cards */}
@@ -226,13 +242,13 @@ function Dashboard() {
                 </div>
                 <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {[...repoStats]
-                    .sort((a, b) => b.openPRs - a.openPRs)
+                    .sort((a, b) => b.totalPRs - a.totalPRs)
                     .map((repo) => (
                     <div
                       key={repo.repository}
                       className={`bg-white border shadow-sm rounded-lg p-4 transition-all duration-200 ${
                         repo.openPRs > 0 
-                          ? 'border-green-700 shadow-green-700/10' 
+                          ? 'border-orange-700 shadow-orange-700/10' 
                           : 'border-gray-200'
                       } hover:shadow-md`}
                     >
@@ -244,36 +260,46 @@ function Dashboard() {
                           repo.openPRs > 5
                             ? 'bg-red-50 text-red-700'
                             : repo.openPRs > 0
-                            ? 'bg-green-50 text-green-700'
+                            ? 'bg-orange-50 text-orange-700'
                             : 'bg-gray-50 text-gray-500'
                         }`}>
                           {repo.openPRs} open
                         </div>
                       </div>
                       <div className="grid grid-cols-3 gap-3">
-                        <div className="bg-gray-50 rounded-lg p-3 border border-gray-100">
-                          <div className="text-xs text-gray-500 mb-1">Total PRs</div>
-                          <div className="text-sm font-semibold text-gray-900">{repo.totalPRs}</div>
+                        <div className="bg-blue-50 rounded-lg p-3 border border-blue-100 transition-all duration-200 hover:shadow-sm hover:border-blue-200">
+                          <div className="text-xs text-blue-600 mb-1 font-medium">Total PRs</div>
+                          <div className="text-base font-semibold text-blue-700">{repo.totalPRs}</div>
                         </div>
-                        <div className={`rounded-lg p-3 border ${
-                          repo.openPRs > 0
-                            ? 'bg-green-50/50 border-green-700/10'
-                            : 'bg-gray-50 border-gray-100'
+                        <div className={`rounded-lg p-3 border transition-all duration-200 ${
+                          repo.openPRs > 5
+                            ? 'bg-red-50 border-red-200 hover:shadow-sm hover:border-red-300'
+                            : repo.openPRs > 0
+                              ? 'bg-orange-50 border-orange-200 hover:shadow-sm hover:border-orange-300'
+                              : 'bg-gray-50 border-gray-200 hover:shadow-sm hover:border-gray-300'
                         }`}>
-                          <div className={`text-xs mb-1 ${
-                            repo.openPRs > 0 ? 'text-green-700/70' : 'text-gray-500'
+                          <div className={`text-xs mb-1 font-medium ${
+                            repo.openPRs > 5 
+                              ? 'text-red-600' 
+                              : repo.openPRs > 0 
+                                ? 'text-orange-600' 
+                                : 'text-gray-500'
                           }`}>
                             Open
                           </div>
-                          <div className={`text-sm font-semibold ${
-                            repo.openPRs > 0 ? 'text-green-700' : 'text-gray-900'
+                          <div className={`text-base font-semibold ${
+                            repo.openPRs > 5 
+                              ? 'text-red-700' 
+                              : repo.openPRs > 0 
+                                ? 'text-orange-700' 
+                                : 'text-gray-700'
                           }`}>
                             {repo.openPRs}
                           </div>
                         </div>
-                        <div className="bg-gray-50 rounded-lg p-3 border border-gray-100">
-                          <div className="text-xs text-gray-500 mb-1">Merged</div>
-                          <div className="text-sm font-semibold text-gray-900">{repo.mergedPRs}</div>
+                        <div className="bg-green-50 rounded-lg p-3 border border-green-100 transition-all duration-200 hover:shadow-sm hover:border-green-200">
+                          <div className="text-xs text-green-600 mb-1 font-medium">Merged</div>
+                          <div className="text-base font-semibold text-green-700">{repo.mergedPRs}</div>
                         </div>
                       </div>
                     </div>
@@ -284,7 +310,7 @@ function Dashboard() {
           )}
         </main>
       </div>
-    </FilterContext.Provider>
+    
   );
 }
 
@@ -307,6 +333,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/open-prs" element={<OpenPRs />} />
+                <Route path="/commits" element={<Commits />} />
                 <Route path="/team" element={<Team />} />
                 <Route path="/users/:githubId" element={<UserDetail />} />
               </Routes>

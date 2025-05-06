@@ -15,23 +15,29 @@ export function Team() {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold text-gray-900 mb-6">Team Statistics</h1>
       <div className="w-full flex justify-end my-4">
-      <DateRangePicker
-        date={{
-          from: filter.startDate ? new Date(filter.startDate) : null,
-          to: filter.endDate ? new Date(filter.endDate) : null,
-        }}
-        onDateChange={(range) => {
-          if (range?.from && range?.to) {
-            setFilter({
-              startDate: range.from.toISOString(),
-              endDate: range.to.toISOString(),
-            });
-          } else {
-            resetToDefault();
-          }
-        }}
-        className="max-w-sm justify-end"
-      />
+        <DateRangePicker
+          date={{
+            from: filter.startDate ? new Date(filter.startDate) : null,
+            to: filter.endDate ? new Date(filter.endDate) : null,
+          }}
+          onDateChange={(range) => {
+            if (range?.from && range?.to) {
+              setFilter({
+                startDate: range.from.toISOString(),
+                endDate: range.to.toISOString(),
+              });
+            } else {
+              resetToDefault();
+            }
+          }}
+          className="max-w-sm justify-end"
+        />
+        <button
+          onClick={resetToDefault}
+          className="ml-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+        >
+          Reset Filters
+        </button>
       </div>
       <div className="bg-white rounded-lg shadow">
         <div className="px-6 py-4 border-b border-gray-200">

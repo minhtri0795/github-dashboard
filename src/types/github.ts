@@ -213,3 +213,33 @@ export interface OpenPRsResponse {
     users: GitHubUser[];
   }>;
 }
+
+export interface CommitStats {
+  total: number;
+  additions: number;
+  deletions: number;
+}
+
+export interface CommitDetails {
+  sha: string;
+  message: string;
+  author: string;
+  created_at: string;
+  branch: string;
+  html_url: string;
+  stats: CommitStats;
+}
+
+export interface RepositoryCommits {
+  _id: string;
+  totalCommits: number;
+  totalAdditions: number;
+  totalDeletions: number;
+  commits: CommitDetails[];
+  authors: GitHubUser[];
+}
+
+export interface CommitsResponse {
+  totalCommits: number;
+  repositories: RepositoryCommits[];
+}
