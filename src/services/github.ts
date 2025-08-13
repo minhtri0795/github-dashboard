@@ -1,24 +1,25 @@
-import axios from 'axios';
-import { 
-  DateFilterDto, 
-  PRStatistics, 
-  PullRequest, 
-  RepositoryStats, 
-  Commit, 
-  CommitStatistics, 
-  SelfMergedPR, 
-  GitHubUserStatistics, 
-  OpenPRsResponse, 
+import axios from "axios";
+import {
+  DateFilterDto,
+  PRStatistics,
+  PullRequest,
+  RepositoryStats,
+  Commit,
+  CommitStatistics,
+  SelfMergedPR,
+  GitHubUserStatistics,
+  OpenPRsResponse,
+  ClosedPRsResponse,
   UserDetail,
   GitHubUser,
-  CommitsResponse
-} from '../types/github';
-import { getGithubEndpoint } from '../config/api';
+  CommitsResponse,
+} from "../types/github";
+import { getGithubEndpoint } from "../config/api";
 
 // Create axios instance with common configuration
 const api = axios.create({
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
@@ -53,7 +54,7 @@ api.interceptors.request.use(
     return config;
   },
   (error) => {
-    console.error('[API Request Error]:', error);
+    console.error("[API Request Error]:", error);
     return Promise.reject(error);
   }
 );
@@ -72,148 +73,187 @@ const getDefaultDateFilter = (): DateFilterDto => {
 export const githubApi = {
   async getAllPRs(): Promise<PullRequest[]> {
     try {
-      const { data } = await api.get(getGithubEndpoint('ALL_PRS'));
+      const { data } = await api.get(getGithubEndpoint("ALL_PRS"));
       return data;
     } catch (error) {
-      console.error('Error fetching all PRs:', error);
+      console.error("Error fetching all PRs:", error);
       return [];
     }
   },
 
-  async getPRStatistics(filter: DateFilterDto = getDefaultDateFilter()): Promise<PRStatistics> {
+  async getPRStatistics(
+    filter: DateFilterDto = getDefaultDateFilter()
+  ): Promise<PRStatistics> {
     try {
-      const { data } = await api.get(getGithubEndpoint('STATISTICS'), { params: filter });
+      const { data } = await api.get(getGithubEndpoint("STATISTICS"), {
+        params: filter,
+      });
       return data;
     } catch (error) {
-      console.error('Error fetching PR statistics:', error);
+      console.error("Error fetching PR statistics:", error);
       throw error;
     }
   },
 
-  async getRepositoryStats(filter: DateFilterDto = getDefaultDateFilter()): Promise<RepositoryStats[]> {
+  async getRepositoryStats(
+    filter: DateFilterDto = getDefaultDateFilter()
+  ): Promise<RepositoryStats[]> {
     try {
-      const { data } = await api.get(getGithubEndpoint('REPOSITORY_STATS'), { params: filter });
+      const { data } = await api.get(getGithubEndpoint("REPOSITORY_STATS"), {
+        params: filter,
+      });
       return data;
     } catch (error) {
-      console.error('Error fetching repository stats:', error);
+      console.error("Error fetching repository stats:", error);
       return [];
     }
   },
 
-  async getOpenPRs(filter: DateFilterDto = getDefaultDateFilter()): Promise<OpenPRsResponse> {
+  async getOpenPRs(
+    filter: DateFilterDto = getDefaultDateFilter()
+  ): Promise<OpenPRsResponse> {
     return api
-      .get(getGithubEndpoint('OPEN_PRS'), { params: filter })
+      .get(getGithubEndpoint("OPEN_PRS"), { params: filter })
       .then((response) => response.data);
   },
 
-  async getClosedPRs(filter: DateFilterDto = getDefaultDateFilter()): Promise<PullRequest[]> {
+  async getClosedPRs(
+    filter: DateFilterDto = getDefaultDateFilter()
+  ): Promise<ClosedPRsResponse> {
     try {
-      const { data } = await api.get(getGithubEndpoint('CLOSED_PRS'), { params: filter });
+      const { data } = await api.get(getGithubEndpoint("CLOSED_PRS"), {
+        params: filter,
+      });
       return data;
     } catch (error) {
-      console.error('Error fetching closed PRs:', error);
-      return [];
-    }
-  },
-
-  async getSelfMergedPRs(filter: DateFilterDto = getDefaultDateFilter()): Promise<SelfMergedPR> {
-    try {
-      const { data } = await api.get(getGithubEndpoint('SELF_MERGED_PRS'), { params: filter });
-      return data;
-    } catch (error) {
-      console.error('Error fetching self-merged PRs:', error);
+      console.error("Error fetching closed PRs:", error);
       return {
-        totalSelfMergedPRs: 0,
-        merged_at: new Date(),
-        merged_by: {
-          _id: '0',
-          githubId: 0,
-          login: 'unknown',
-          node_id: '',
-          avatar_url: '',
-          gravatar_id: '',
-          url: '',
-          html_url: '',
-          followers_url: '',
-          following_url: '',
-          gists_url: '',
-          starred_url: '',
-          subscriptions_url: '',
-          organizations_url: '',
-          repos_url: '',
-          events_url: '',
-          received_events_url: '',
-          type: 'User',
-          site_admin: false,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          __v: 0
-        }
+        totalClosedPRs: 0,
+        repositories: [],
       };
     }
   },
 
-  async getCommits(filter: DateFilterDto = getDefaultDateFilter()): Promise<Commit[]> {
+  async getSelfMergedPRs(
+    filter: DateFilterDto = getDefaultDateFilter()
+  ): Promise<SelfMergedPR> {
     try {
-      const { data } = await api.get(getGithubEndpoint('COMMITS'), { params: filter });
+      const { data } = await api.get(getGithubEndpoint("SELF_MERGED_PRS"), {
+        params: filter,
+      });
       return data;
     } catch (error) {
-      console.error('Error fetching commits:', error);
+      console.error("Error fetching self-merged PRs:", error);
+      return {
+        totalSelfMergedPRs: 0,
+        merged_at: new Date(),
+        merged_by: {
+          _id: "0",
+          githubId: 0,
+          login: "unknown",
+          node_id: "",
+          avatar_url: "",
+          gravatar_id: "",
+          url: "",
+          html_url: "",
+          followers_url: "",
+          following_url: "",
+          gists_url: "",
+          starred_url: "",
+          subscriptions_url: "",
+          organizations_url: "",
+          repos_url: "",
+          events_url: "",
+          received_events_url: "",
+          type: "User",
+          site_admin: false,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          __v: 0,
+        },
+      };
+    }
+  },
+
+  async getCommits(
+    filter: DateFilterDto = getDefaultDateFilter()
+  ): Promise<Commit[]> {
+    try {
+      const { data } = await api.get(getGithubEndpoint("COMMITS"), {
+        params: filter,
+      });
+      return data;
+    } catch (error) {
+      console.error("Error fetching commits:", error);
       return [];
     }
   },
 
   async getCommitStatistics(): Promise<CommitStatistics> {
     try {
-      const { data } = await api.get(getGithubEndpoint('COMMIT_STATISTICS'));
+      const { data } = await api.get(getGithubEndpoint("COMMIT_STATISTICS"));
       return data;
     } catch (error) {
-      console.error('Error fetching commit statistics:', error);
+      console.error("Error fetching commit statistics:", error);
       throw error;
     }
   },
 
-  async getUsers(filter: DateFilterDto = getDefaultDateFilter()): Promise<GitHubUserStatistics[]> {
+  async getUsers(
+    filter: DateFilterDto = getDefaultDateFilter()
+  ): Promise<GitHubUserStatistics[]> {
     try {
-      const { data } = await api.get(getGithubEndpoint('USERS'), { params: filter });
+      const { data } = await api.get(getGithubEndpoint("USERS"), {
+        params: filter,
+      });
       return data;
     } catch (error) {
-      console.error('Error fetching users:', error);
+      console.error("Error fetching users:", error);
       return [];
     }
   },
 
   async getUsersAll(): Promise<GitHubUser[]> {
-    return api.get(getGithubEndpoint('USERS'));
+    return api.get(getGithubEndpoint("USERS"));
   },
 
-  async getUserDetail(githubId: string, filter: DateFilterDto = getDefaultDateFilter()): Promise<UserDetail> {
+  async getUserDetail(
+    githubId: string,
+    filter: DateFilterDto = getDefaultDateFilter()
+  ): Promise<UserDetail> {
     try {
-      console.log('Fetching user detail with params:', { githubId, filter });
-      const endpoint = getGithubEndpoint('USER_DETAIL').replace(':githubId', githubId);
-      console.log('Calling endpoint:', endpoint);
+      console.log("Fetching user detail with params:", { githubId, filter });
+      const endpoint = getGithubEndpoint("USER_DETAIL").replace(
+        ":githubId",
+        githubId
+      );
+      console.log("Calling endpoint:", endpoint);
       const { data } = await api.get(endpoint, { params: filter });
-      console.log('Response data:', data);
+      console.log("Response data:", data);
       return data;
     } catch (error) {
-      console.error('Error fetching user detail:', error);
+      console.error("Error fetching user detail:", error);
       if (axios.isAxiosError(error)) {
-        console.error('Response:', error.response?.data);
-        console.error('Status:', error.response?.status);
+        console.error("Response:", error.response?.data);
+        console.error("Status:", error.response?.status);
       }
       throw error;
     }
   },
-  
-  async getCommitsData(filter: DateFilterDto = getDefaultDateFilter()): Promise<CommitsResponse> {
+
+  async getCommitsData(
+    filter: DateFilterDto = getDefaultDateFilter()
+  ): Promise<CommitsResponse> {
     try {
-      const { data } = await api.get(getGithubEndpoint('COMMITS'), { params: filter });
+      const { data } = await api.get(getGithubEndpoint("COMMITS"), {
+        params: filter,
+      });
       return data;
     } catch (error) {
-      console.error('Error fetching commits data:', error);
+      console.error("Error fetching commits data:", error);
       return {
         totalCommits: 0,
-        repositories: []
+        repositories: [],
       };
     }
   },
